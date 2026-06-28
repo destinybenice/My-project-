@@ -1,0 +1,311 @@
+/* General Layout Settings */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333333;
+    line-height: 1.6;
+    background-color: #f4f9f4;
+}
+
+/* Header & Navigation Menu */
+header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+nav h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #2e7d32; /* Main professional green */
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #555555;
+    font-weight: 600;
+}
+
+/* Hero Section (The top banner) */
+#hero {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    padding: 60px 20px;
+    text-align: center;
+}
+
+#hero h2 {
+    font-size: 2rem;
+    color: #1b5e20;
+    margin-bottom: 10px;
+}
+
+#hero p {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: #444444;
+}
+
+/* Standard Sections (About and Booking) */
+#about, #booking {
+    padding: 60px 20px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h2 {
+    color: #2e7d32;
+    margin-bottom: 20px;
+}
+
+/* New Services Section Layout */
+#services {
+    padding: 60px 20px;
+    background-color: #f9f9f9; /* Soft grey background to separate it from About */
+    text-align: center;
+}
+
+.section-subtitle {
+    color: #666666;
+    margin-bottom: 40px;
+}
+
+/* Grid layout for the service cards */
+.services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Individual Service Cards */
+.service-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid #2e7d32; /* Green accent bar on the side */
+    text-align: left;
+}
+
+.service-card h3 {
+    margin-top: 0;
+    color: #333333;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.service-card p {
+    color: #666666;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+/* Buttons (Universal styling) */
+.btn {
+    display: inline-block;
+    background-color: #2e7d32;
+    color: #ffffff;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #1b5e20;
+}
+
+/* Desktop layout adjustment for tablets and computers */
+@media (min-width: 768px) {
+    .services-grid {
+        flex-direction: row;
+    }
+    .service-card {
+        flex: 1;
+    }
+}
+
+/* ===================================
+   UPDATED SIGNUP PAGE FORM STYLES
+   =================================== */
+#signup-container {
+    padding: 40px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.form-card {
+    background: #ffffff;
+    padding: 25px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 360px; /* Constrains it perfectly on mobile screens */
+    margin: 0 auto;   /* Forces the card to absolute center */
+    border-top: 5px solid #2e7d32;
+    box-sizing: border-box;
+}
+
+.form-card h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #2e7d32;
+}
+
+.form-card p {
+    text-align: center;
+    color: #666666;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    line-height: 1.4;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+    width: 100%;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #444444;
+    font-size: 0.85rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px; /* Slightly larger hit target for mobile fingers */
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #2e7d32;
+    background-color: #f4f9f4;
+}
+
+.btn-submit {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.form-footer {
+    margin-top: 20px !important;
+    text-align: center !important;
+    font-size: 0.9rem;
+    width: 100%;
+    display: block;
+}
+
+.form-footer a {
+    color: #2e7d32;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* ===================================
+   CLEAN MOBILE NAVIGATION FIX
+   =================================== */
+nav {
+    display: flex;
+    flex-direction: column; /* Stacks name on top, links below on phones */
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    gap: 10px;
+    background: #ffffff;
+}
+
+nav ul {
+    display: flex;
+    flex-wrap: wrap;       /* Allows links to drop down nicely if they run out of room */
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: 15px;             /* Keeps nice even spacing between menu items */
+}
+
+nav h1 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+/* Desktop sizing adjustments */
+@media (min-width: 768px) {
+    nav {
+        flex-direction: row; 
+        justify-content: space-between;
+    }
+}
+
+/* ===================================
+   ULTIMATE MOBILE SIGNUP RESET
+   =================================== */
+#signup-container {
+    display: flex !important;
+    flex-direction: column !important; /* Forces vertical stacking */
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-height: 80vh !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+}
+
+.form-card {
+    background: #ffffff !important;
+    width: 100% !important;
+    max-width: 380px !important; /* Keeps it from being too wide */
+    margin: 0 auto !important;   /* Pulls it to the absolute center */
+    padding: 30px 20px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    box-sizing: border-box !important;
+}
+
+/* Fixes the floating footer text on the right */
+.form-footer {
+    display: block !important;
+    text-align: center !important;
+    width: 100% !important;
+    margin-top: 20px !important;
+    position: static !important; /* Prevents it from breaking out */
+}

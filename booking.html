@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book an Appointment | Dr. Destiny Benice</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f1f8e9 0%, #ffffff 100%);
+            min-height: 100vh;
+        }
+        #booking-container {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 5px solid #2e7d32;
+            text-align: center;
+        }
+        .form-card h2 {
+            color: #1b5e20;
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #455a64;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cfd8dc;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            background-color: #fafafa;
+        }
+        .form-group select:focus, .form-group input:focus {
+            border-color: #2e7d32;
+            outline: none;
+            box-shadow: 0 0 5px rgba(46,125,50,0.2);
+            background-color: #fff;
+        }
+        .btn-submit {
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(46, 125, 50, 0.2);
+            transition: background 0.2s;
+        }
+        .btn-submit:disabled {
+            background-color: #a5d6a7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav>
+        <h1 style="color: #2e7d32;">Dr. Destiny Benice</h1>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="booking.html">Booking</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Booking Form Card -->
+    <div id="booking-container">
+        <div class="form-card">
+            <h2>Schedule Your Appointment</h2>
+            <p style="color: #666; margin-bottom: 25px; font-size: 0.95rem;">Select your required treatment type and preferred schedule.</p>
+            
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="service">Select Medical Service</label>
+                    <select id="service" required>
+                        <option value="General Checkup">🩺 General Checkup</option>
+                        <option value="Diagnostic Screening">🧪 Diagnostic Screening</option>
+                        <option value="Chronic Care Management">📋 Chronic Care Management</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Preferred Date</label>
+                    <input type="date" id="date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Preferred Time</label>
+                    <input type="time" id="time" required>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-submit">Confirm Appointment Slot</button>
+            </form>
+        </div>
+    </div>
+
+   <script>
+        const bookingForm = document.getElementById('bookingForm');
+        const submitButton = document.getElementById('submitBtn');
+
+        bookingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const service = document.getElementById('service').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+
+            submitButton.innerText = "Processing Booking...";
+            submitButton.disabled = true;
+
+            const url = "https://ckqmwsjbidgoouhkekvi.supabase.co/rest/v1/appointments";
+            const apiKey = "sb_publishable_HG0ZSaSYB5nsoIjcLeb3nQ_IM1RPDSu";
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify({
+    service: service,
+    appointment_date: date,
+    appointment_time: time
+})
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // This will show us the exact message from Supabase (e.g., missing column, invalid token)
+                    throw new Error(data.message || data.details || JSON.stringify(data));
+                }
+
+                alert(`Appointment Confirmed Successfully!\n\nService: ${service}\nDate: ${date}\nTime: ${time}`);
+                window.location.href = "dashboard.html";
+
+            } catch (error) {
+                alert("Database Error: " + error.message);
+                submitButton.innerText = "Confirm Appointment Slot";
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

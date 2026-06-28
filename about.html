@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About the Doctor | Dr. Destiny Benice</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f1f8e9 0%, #ffffff 100%);
+            min-height: 100vh;
+        }
+        .about-container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        .profile-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 5px solid #2e7d32;
+        }
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            background-color: #e8f5e9;
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .profile-card h2 {
+            color: #1b5e20;
+            font-size: 1.8rem;
+            margin: 0 0 5px 0;
+        }
+        .profile-card .subtitle {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .bio-text {
+            color: #455a64;
+            line-height: 1.7;
+            font-size: 1rem;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .credentials-grid {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+        .credential-tag {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            flex: 1;
+            min-width: 120px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .btn-cta {
+            display: inline-block;
+            background-color: #2e7d32;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(46, 125, 50, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav>
+        <h1 style="color: #2e7d32;">Dr. Destiny Benice</h1>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="booking.html">Booking</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Profile Panel -->
+    <main class="about-container">
+        <!-- Replace it with this: -->
+<img src="profile.jpg" alt="Dr. Destiny Benice" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #2e7d32; margin-bottom: 15px;">
+            <h2>Dr. Destiny Benice</h2>
+            <div class="subtitle">General Practitioner & Clinical Director</div>
+            
+            <div class="bio-text">
+                <p>Welcome to our modern practice. I am dedicated to delivering comprehensive, patient-centered medical consultations that prioritize preventive health, clear communication, and personalized diagnostics.</p>
+                <p>By blending modern medical practices with seamless digital health tools, our mission is to ensure booking care, tracking checkups, and maintaining long-term health is simple, transparent, and highly accessible from anywhere.</p>
+            </div>
+
+<!-- Focus Badges -->
+            <div class="credentials-grid">
+                <div class="credential-tag">🌟 Patient-Centered</div>
+                <div class="credential-tag">🔬 Preventive Care</div>
+                <div class="credential-tag">📅 Smart Scheduling</div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #cfd8dc; margin: 30px 0;">
+
+            <!-- 📸 EXTRA GALLERY PHOTOS START -->
+            <h4 style="color: #1b5e20; margin-bottom: 15px; font-size: 1.1rem; text-align: left;">Practice Gallery</h4>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;">
+                
+                <!-- Photo 1 (Uses your main profile photo) -->
+                <div style="flex: 1; min-width: 130px; max-width: 180px;">
+                    <img src="patient.jpg" alt="Clinical Setting" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid #2e7d32;">
+                </div>
+
+                <!-- Photo 2 (Change 'clinic.jpg' to your second uploaded file) -->
+                <div style="flex: 1; min-width: 130px; max-width: 180px;">
+                    <img src="laboratory.jpg" alt="Consultation Space" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid #2e7d32;">
+                </div>
+
+                <!-- Photo 3 (Change 'steth.jpg' to your third uploaded file) -->
+                <div style="flex: 1; min-width: 130px; max-width: 180px;">
+                    <img src="medical.jpg" alt="Diagnostics" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid #2e7d32;">
+                </div>
+
+            </div>
+            <!-- 📸 EXTRA GALLERY PHOTOS END -->
+            <hr style="border: 0; border-top: 1px solid #cfd8dc; margin: 30px 0;">
+            
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">Need to check your symptoms or arrange a routine checkup?</p>
+            <a href="booking.html" class="btn-cta">🗓️ Schedule a Consultation</a>
+        </div>
+    </main>
+
+</body>
+</html>

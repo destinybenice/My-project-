@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard | Dr. Destiny Benice</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav>
+        <h1 style="color: #2e7d32;">Dr. Destiny Benice</h1>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="booking.html">Book Appointment</a></li>
+            <li><a href="index.html" id="logoutBtn" style="color: #c62828; font-weight: bold;">Log Out</a></li>
+        </ul>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <section id="signup-container" style="max-width: 800px; margin: 30px auto; padding: 0 15px;">
+        <div class="form-card" style="max-width: 100%; text-align: left;">
+            <h2 style="color: #2e7d32; margin-bottom: 5px;">Welcome Back to Your Portal</h2>
+            <p style="color: #666; margin-bottom: 25px;">Manage your appointments and medical records securely.</p>
+            
+            <div style="display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;">
+                <a href="booking.html" style="background-color: #2e7d32; color: white; padding: 12px 20px; border-radius: 5px; font-weight: bold; text-decoration: none; display: inline-block;">➕ Book New Appointment</a>
+            </div>
+
+            <h3 style="color: #1b5e20; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 15px;">Your Scheduled Appointments</h3>
+            
+            <!-- Target container where appointments will load -->
+            <div id="appointmentsList">
+                <p style="color: #888; font-style: italic;">Loading your appointments...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript to Fetch Data from Supabase -->
+    <script>
+        async function fetchAppointments() {
+            const appointmentsList = document.getElementById('appointmentsList');
+            
+            // Supabase Database URL and API key
+            const url = "https://ckqmwsjbidgoouhkekvi.supabase.co/rest/v1/appointments?select=*&order=appointment_date.asc";
+            const apiKey = "sb_publishable_HG0ZSaSYB5nsoIjcLeb3nQ_IM1RPDSu";
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Could not retrieve appointments.");
+                }
+
+                const data = await response.json();
+                
+                // Clear the loading message
+                appointmentsList.innerHTML = "";
+
+                if (data.length === 0) {
+                    appointmentsList.innerHTML = `<p style="color: #888; font-style: italic;">You have no scheduled appointments at this time.</p>`;
+                    return;
+                }
+
+                // Loop through appointments and display them beautifully
+                data.forEach(appt => {
+                    const apptCard = document.createElement('div');
+                    apptCard.style.cssText = "background: #f9f9f9; padding: 15px; border-radius: 6px; margin-bottom: 12px; border-left: 5px solid #2e7d32; box-shadow: 0 2px 4px rgba(0,0,0,0.05);";
+                    
+                    apptCard.innerHTML = `
+                        <div style="font-weight: bold; color: #1b5e20; font-size: 1.1rem; margin-bottom: 5px;">${appt.service}</div>
+                        <div style="color: #555; font-size: 0.95rem;">📅 <strong>Date:</strong> ${appt.appointment_date}</div>
+                        <div style="color: #555; font-size: 0.95rem;">⏰ <strong>Time:</strong> ${appt.appointment_time}</div>
+                    `;
+                    appointmentsList.appendChild(apptCard);
+                });
+
+            } catch (err) {
+                appointmentsList.innerHTML = `<p style="color: #c62828;">Error loading records. Please refresh the page.</p>`;
+            }
+        }
+
+        // Run the fetch function automatically when the page opens
+        window.addEventListener('DOMContentLoaded', fetchAppointments);
+
+        // Quick logout handler to clear any simulation details
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            alert("You have logged out successfully.");
+        });
+    </script>
+
+</body>
+</html>
