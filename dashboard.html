@@ -8,17 +8,15 @@
 </head>
 <body>
 
-    <!-- Navigation Header -->
     <nav>
         <h1 style="color: #2e7d32;">Dr. Destiny Benice</h1>
         <ul>
             <li><a href="dashboard.html">Dashboard</a></li>
             <li><a href="booking.html">Book Appointment</a></li>
-            <li><a href="index.html" id="logoutBtn" style="color: #c62828; font-weight: bold;">Log Out</a></li>
+            <li><a href="admin.html" style="color: #0f5132; font-weight: bold;">Go to Admin Portal 👨‍⚕️</a></li>
         </ul>
     </nav>
 
-    <!-- Dashboard Container -->
     <section id="signup-container" style="max-width: 800px; margin: 30px auto; padding: 0 15px;">
         <div class="form-card" style="max-width: 100%; text-align: left;">
             <h2 style="color: #2e7d32; margin-bottom: 5px;">Welcome Back to Your Portal</h2>
@@ -30,19 +28,15 @@
 
             <h3 style="color: #1b5e20; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 15px;">Your Scheduled Appointments</h3>
             
-            <!-- Target container where appointments will load -->
             <div id="appointmentsList">
                 <p style="color: #888; font-style: italic;">Loading your appointments...</p>
             </div>
         </div>
     </section>
 
-    <!-- JavaScript to Fetch Data from Supabase -->
     <script>
         async function fetchAppointments() {
             const appointmentsList = document.getElementById('appointmentsList');
-            
-            // Supabase Database URL and API key
             const url = "https://ckqmwsjbidgoouhkekvi.supabase.co/rest/v1/appointments?select=*&order=appointment_date.asc";
             const apiKey = "sb_publishable_HG0ZSaSYB5nsoIjcLeb3nQ_IM1RPDSu";
 
@@ -56,13 +50,9 @@
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error("Could not retrieve appointments.");
-                }
+                if (!response.ok) throw new Error("Could not retrieve appointments.");
 
                 const data = await response.json();
-                
-                // Clear the loading message
                 appointmentsList.innerHTML = "";
 
                 if (data.length === 0) {
@@ -70,32 +60,45 @@
                     return;
                 }
 
-                // Loop through appointments and display them beautifully
-                data.forEach(appt => {
+                // Read confirmed list
+                const localStatuses = JSON.parse(localStorage.getItem('confirmedAppointments')) || {};
+
+                data.forEach((appt, index) => {
                     const apptCard = document.createElement('div');
-                    apptCard.style.cssText = "background: #f9f9f9; padding: 15px; border-radius: 6px; margin-bottom: 12px; border-left: 5px solid #2e7d32; box-shadow: 0 2px 4px rgba(0,0,0,0.05);";
+                    apptCard.style.cssText = "background: #f9f9f9; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);";
+
+                    const apptKey = appt.id || `appt-${index}`;
+                    const apptStatus = localStatuses[apptKey] || 'Pending';
+                    const apptDoctor = 'Dr. Destiny Benice (General Practitioner)';
                     
+                    const displayDate = appt.appointment_date || appt.date || 'N/A';
+                    const displayTime = appt.appointment_time || appt.time || 'N/A';
+
+                    let badgeColor = '#664d03'; let badgeBg = '#fff3cd'; let leftBorderColor = '#ffc107';
+                    if (apptStatus.toLowerCase() === 'confirmed') {
+                        badgeColor = '#0f5132'; badgeBg = '#d1e7dd'; leftBorderColor = '#198754';
+                    }
+
+                    apptCard.style.borderLeft = `5px solid ${leftBorderColor}`;
                     apptCard.innerHTML = `
-                        <div style="font-weight: bold; color: #1b5e20; font-size: 1.1rem; margin-bottom: 5px;">${appt.service}</div>
-                        <div style="color: #555; font-size: 0.95rem;">📅 <strong>Date:</strong> ${appt.appointment_date}</div>
-                        <div style="color: #555; font-size: 0.95rem;">⏰ <strong>Time:</strong> ${appt.appointment_time}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h3 style="margin: 0; color: #0f5132; font-size: 16px; font-weight: bold;">${appt.service || 'General Checkup'}</h3>
+                            <span style="background-color: ${badgeBg}; color: ${badgeColor}; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase;">${apptStatus}</span>
+                        </div>
+                        <p style="margin: 5px 0; color: #555; font-size: 14px;">👨‍⚕️ <strong>Doctor:</strong> ${apptDoctor}</p>
+                        <p style="margin: 5px 0; color: #555; font-size: 14px;">📅 <strong>Date:</strong> ${displayDate}</p>
+                        <p style="margin: 5px 0; color: #555; font-size: 14px;">⏰ <strong>Time:</strong> ${displayTime}</p>
                     `;
+
                     appointmentsList.appendChild(apptCard);
                 });
 
-            } catch (err) {
-                appointmentsList.innerHTML = `<p style="color: #c62828;">Error loading records. Please refresh the page.</p>`;
+            } catch (error) {
+                appointmentsList.innerHTML = `<p style="color: #c62828; font-style: italic;">Error loading appointments.</p>`;
             }
         }
 
-        // Run the fetch function automatically when the page opens
         window.addEventListener('DOMContentLoaded', fetchAppointments);
-
-        // Quick logout handler to clear any simulation details
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            alert("You have logged out successfully.");
-        });
     </script>
-
 </body>
 </html>

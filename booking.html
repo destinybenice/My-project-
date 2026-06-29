@@ -111,6 +111,22 @@
                     <label for="time">Preferred Time</label>
                     <input type="time" id="time" required>
                 </div>
+                <!-- Choose Doctor Dropdown -->
+<div class="form-group" style="margin-bottom: 15px; text-align: left;">
+    <label for="doctor" style="display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748;">Select Specialist Doctor</label>
+    <select id="doctor" name="doctor" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: white;">
+        <option value="" disabled selected>Select a specialist...</option>
+        <option value="dr-smith">Dr. Sarah Smith (Cardiologist)</option>
+        <option value="dr-johnson">Dr. David Johnson (Pediatrician)</option>
+        <option value="dr-benice">Dr. Destiny Benice (General Practitioner)</option>
+    </select>
+</div>
+
+<!-- Symptoms / Notes Text Area -->
+<div class="form-group" style="margin-bottom: 15px; text-align: left;">
+    <label for="notes" style="display: block; font-weight: bold; margin-bottom: 5px; color: #2d3748;">Reason for Visit / Symptoms</label>
+    <textarea id="notes" name="notes" rows="4" placeholder="Briefly describe your symptoms or reason for scheduling..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: sans-serif; box-sizing: border-box;"></textarea>
+</div>
 
                 <button type="submit" id="submitBtn" class="btn-submit">Confirm Appointment Slot</button>
             </form>
@@ -127,6 +143,8 @@
             const service = document.getElementById('service').value;
             const date = document.getElementById('date').value;
             const time = document.getElementById('time').value;
+            const doctor = document.getElementById('doctor').value;
+const notes = document.getElementById('notes').value;
 
             submitButton.innerText = "Processing Booking...";
             submitButton.disabled = true;
@@ -157,7 +175,7 @@
                     throw new Error(data.message || data.details || JSON.stringify(data));
                 }
 
-                alert(`Appointment Confirmed Successfully!\n\nService: ${service}\nDate: ${date}\nTime: ${time}`);
+                alert(`Appointment Confirmed Successfully!\n\nService: ${service}\nDate: ${date}\nTime: ${time}\nDoctor: ${doctor}\nNotes: ${notes}`);
                 window.location.href = "dashboard.html";
 
             } catch (error) {

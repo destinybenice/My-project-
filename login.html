@@ -129,6 +129,9 @@
                     throw new Error(data.error_description || data.message || "Invalid email or password");
                 }
 
+                // Keep track of who just logged in
+                localStorage.setItem('userId', data.user.id);
+
                 alert("Login successful! Welcome back.");
                 window.location.href = "dashboard.html";
 

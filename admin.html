@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Admin Portal | Dr. Destiny Benice</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <h1 style="color: #0f5132;">👨‍⚕️ Dr. Destiny Benice (Admin Portal)</h1>
+        <ul>
+            <li><a href="admin.html" style="font-weight: bold;">Manage Bookings</a></li>
+            <li><a href="dashboard.html" style="color: #2e7d32;">View Patient Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <section style="max-width: 900px; margin: 30px auto; padding: 0 15px;">
+        <div class="form-card" style="max-width: 100%; text-align: left; border-top: 5px solid #0f5132;">
+            <h2 style="color: #0f5132; margin-bottom: 5px;">Appointment Management Desk</h2>
+            <p style="color: #666; margin-bottom: 25px;">Review incoming appointment requests from Supabase and update patient statuses.</p>
+
+            <h3 style="color: #0f5132; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 15px;">All Patient Bookings</h3>
+            
+            <div id="adminAppointmentsList">
+                <p style="color: #888; font-style: italic;">Fetching doctor records...</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const url = "https://ckqmwsjbidgoouhkekvi.supabase.co/rest/v1/appointments";
+        const apiKey = "sb_publishable_HG0ZSaSYB5nsoIjcLeb3nQ_IM1RPDSu";
+
+        async function fetchAdminAppointments() {
+            const listContainer = document.getElementById('adminAppointmentsList');
+            
+            try {
+                const response = await fetch(`${url}?select=*&order=appointment_date.asc`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error("Failed to load records.");
+
+                const data = await response.json();
+                listContainer.innerHTML = "";
+
+                if (data.length === 0) {
+                    listContainer.innerHTML = `<p style="color: #888; font-style: italic;">No appointment slots have been booked yet.</p>`;
+                    return;
+                }
+
+                // Load any previously confirmed appointments from local memory
+                const localStatuses = JSON.parse(localStorage.getItem('confirmedAppointments')) || {};
+
+                data.forEach((appt, index) => {
+                    const card = document.createElement('div');
+                    card.style.cssText = "background: #fff; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);";
+
+                    // Use the unique date/time combined as a fallback key if ID isn't numeric
+                    const apptKey = appt.id || `appt-${index}`;
+                    const apptStatus = localStatuses[apptKey] || 'Pending';
+                    
+                    const displayDate = appt.appointment_date || appt.date || 'N/A';
+                    const displayTime = appt.appointment_time || appt.time || 'N/A';
+
+                    let badgeColor = '#664d03'; let badgeBg = '#fff3cd'; let leftBorder = '#ffc107';
+                    if (apptStatus.toLowerCase() === 'confirmed') {
+                        badgeColor = '#0f5132'; badgeBg = '#d1e7dd'; leftBorder = '#198754';
+                    }
+                    card.style.borderLeft = `5px solid ${leftBorder}`;
+
+                    let actionButton = '';
+                    if (apptStatus.toLowerCase() === 'pending') {
+                        actionButton = `<button onclick="updateStatus('${apptKey}')" style="background-color: #198754; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px;">✅ Confirm Booking</button>`;
+                    } else {
+                        actionButton = `<span style="color: #198754; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 10px;">✨ Approved by Dr. Destiny</span>`;
+                    }
+
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; color: #333; font-size: 16px; font-weight: bold;">${appt.service || 'General Checkup'}</h3>
+                            <span style="background-color: ${badgeBg}; color: ${badgeColor}; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase;">${apptStatus}</span>
+                        </div>
+                        <div style="font-size: 14px; color: #555; margin-top: 5px;">
+                            <p style="margin: 3px 0;">📅 <strong>Date:</strong> ${displayDate}</p>
+                            <p style="margin: 3px 0;">⏰ <strong>Time:</strong> ${displayTime}</p>
+                        </div>
+                        ${actionButton}
+                    `;
+                    listContainer.appendChild(card);
+                });
+
+            } catch (error) {
+                listContainer.innerHTML = `<p style="color: #c62828;">Error loading appointments from Supabase.</p>`;
+            }
+        }
+
+        async function updateStatus(apptId) {
+            try {
+                const response = await fetch(`${url}?id=eq.${apptId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify({ status: 'Confirmed' })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to update database.");
+                }
+
+                alert("Appointment successfully confirmed!");
+                fetchAdminAppointments(); 
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', fetchAdminAppointments);
+    </script>
+</body>
+</html>
