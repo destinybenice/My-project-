@@ -56,17 +56,12 @@
                     return;
                 }
 
-                // Load any previously confirmed appointments from local memory
-                const localStatuses = JSON.parse(localStorage.getItem('confirmedAppointments')) || {};
-
-                data.forEach((appt, index) => {
+                data.forEach((appt) => {
                     const card = document.createElement('div');
                     card.style.cssText = "background: #fff; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);";
 
-                    // Use the unique date/time combined as a fallback key if ID isn't numeric
-                    const apptKey = appt.id || `appt-${index}`;
-                    const apptStatus = localStatuses[apptKey] || 'Pending';
-                    
+                    // Pulling directly from database 'status' column
+                    const apptStatus = appt.status || 'Pending';
                     const displayDate = appt.appointment_date || appt.date || 'N/A';
                     const displayTime = appt.appointment_time || appt.time || 'N/A';
 
@@ -78,7 +73,7 @@
 
                     let actionButton = '';
                     if (apptStatus.toLowerCase() === 'pending') {
-                        actionButton = `<button onclick="updateStatus('${apptKey}')" style="background-color: #198754; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px;">✅ Confirm Booking</button>`;
+                        actionButton = `<button onclick="updateStatus('${appt.id}')" style="background-color: #198754; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px;">✅ Confirm Booking</button>`;
                     } else {
                         actionButton = `<span style="color: #198754; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 10px;">✨ Approved by Dr. Destiny</span>`;
                     }
@@ -115,12 +110,10 @@
                     body: JSON.stringify({ status: 'Confirmed' })
                 });
 
-                if (!response.ok) {
-                    throw new Error("Failed to update database.");
-                }
+                if (!response.ok) throw new Error("Database update failed.");
 
                 alert("Appointment successfully confirmed!");
-                fetchAdminAppointments(); 
+                fetchAdminAppointments(); // Refresh the list
             } catch (error) {
                 alert("Error: " + error.message);
             }
