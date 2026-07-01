@@ -39,84 +39,74 @@
             try {
                 const response = await fetch(`${url}?select=*&order=appointment_date.asc`, {
                     method: 'GET',
-                    headers: {
-                        'apikey': apiKey,
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'apikey': apiKey, 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
                 });
 
                 if (!response.ok) throw new Error("Failed to load records.");
-
                 const data = await response.json();
                 listContainer.innerHTML = "";
 
                 if (data.length === 0) {
-                    listContainer.innerHTML = `<p style="color: #888; font-style: italic;">No appointment slots have been booked yet.</p>`;
+                    listContainer.innerHTML = `<p style="color: #888; font-style: italic;">No appointments found.</p>`;
                     return;
                 }
 
                 data.forEach((appt) => {
                     const card = document.createElement('div');
                     card.style.cssText = "background: #fff; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);";
-
-                    // Pulling directly from database 'status' column
-                    const apptStatus = appt.status || 'Pending';
+                    
+                    const apptStatus = (appt.status || 'pending').toLowerCase();
                     const displayDate = appt.appointment_date || appt.date || 'N/A';
                     const displayTime = appt.appointment_time || appt.time || 'N/A';
 
-                    let badgeColor = '#664d03'; let badgeBg = '#fff3cd'; let leftBorder = '#ffc107';
-                    if (apptStatus.toLowerCase() === 'confirmed') {
-                        badgeColor = '#0f5132'; badgeBg = '#d1e7dd'; leftBorder = '#198754';
-                    }
-                    card.style.borderLeft = `5px solid ${leftBorder}`;
+                    let badgeColor = apptStatus === 'confirmed' ? '#0f5132' : '#664d03';
+                    let badgeBg = apptStatus === 'confirmed' ? '#d1e7dd' : '#fff3cd';
+                    card.style.borderLeft = `5px solid ${apptStatus === 'confirmed' ? '#198754' : '#ffc107'}`;
 
-                    let actionButton = '';
-                    if (apptStatus.toLowerCase() === 'pending') {
-                        actionButton = `<button onclick="updateStatus('${appt.id}')" style="background-color: #198754; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px;">✅ Confirm Booking</button>`;
+                    let actionButtons = '';
+                    if (apptStatus === 'pending') {
+                        actionButtons = `<button onclick="updateStatus('${appt.id}')" style="background-color: #198754; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer;">✅ Confirm</button>`;
                     } else {
-                        actionButton = `<span style="color: #198754; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 10px;">✨ Approved by Dr. Destiny</span>`;
+                        actionButtons = `<span style="color: #198754; font-size: 13px; font-weight: bold;">✨ Approved</span>`;
                     }
+                    
+                    // Add the Delete Button
+                    actionButtons += ` <button onclick="deleteBooking('${appt.id}')" style="background-color: #e53935; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-left: 10px;">🗑️ Delete</button>`;
 
                     card.innerHTML = `
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 style="margin: 0; color: #333; font-size: 16px; font-weight: bold;">${appt.service || 'General Checkup'}</h3>
-                            <span style="background-color: ${badgeBg}; color: ${badgeColor}; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase;">${apptStatus}</span>
+                            <h3 style="margin: 0; color: #333; font-size: 16px;">${appt.service || 'General Checkup'}</h3>
+                            <span style="background-color: ${badgeBg}; color: ${badgeColor}; padding: 4px 8px; border-radius: 12px; font-size: 11px; text-transform: uppercase; font-weight: bold;">${apptStatus}</span>
                         </div>
                         <div style="font-size: 14px; color: #555; margin-top: 5px;">
                             <p style="margin: 3px 0;">📅 <strong>Date:</strong> ${displayDate}</p>
                             <p style="margin: 3px 0;">⏰ <strong>Time:</strong> ${displayTime}</p>
                         </div>
-                        ${actionButton}
+                        <div style="margin-top: 10px;">${actionButtons}</div>
                     `;
                     listContainer.appendChild(card);
                 });
-
             } catch (error) {
-                listContainer.innerHTML = `<p style="color: #c62828;">Error loading appointments from Supabase.</p>`;
+                listContainer.innerHTML = `<p style="color: #c62828;">Error loading appointments.</p>`;
             }
         }
 
         async function updateStatus(apptId) {
-            try {
-                const response = await fetch(`${url}?id=eq.${apptId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': apiKey,
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=representation'
-                    },
-                    body: JSON.stringify({ status: 'Confirmed' })
-                });
+            const response = await fetch(`${url}?id=eq.${apptId}`, {
+                method: 'PATCH',
+                headers: { 'apikey': apiKey, 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+                body: JSON.stringify({ status: 'Confirmed' })
+            });
+            if (response.ok) { alert("Confirmed!"); fetchAdminAppointments(); }
+        }
 
-                if (!response.ok) throw new Error("Database update failed.");
-
-                alert("Appointment successfully confirmed!");
-                fetchAdminAppointments(); // Refresh the list
-            } catch (error) {
-                alert("Error: " + error.message);
-            }
+        async function deleteBooking(apptId) {
+            if (!confirm("Are you sure you want to delete this booking?")) return;
+            const response = await fetch(`${url}?id=eq.${apptId}`, {
+                method: 'DELETE',
+                headers: { 'apikey': apiKey, 'Authorization': `Bearer ${apiKey}` }
+            });
+            if (response.ok) { alert("Deleted!"); fetchAdminAppointments(); }
         }
 
         window.addEventListener('DOMContentLoaded', fetchAdminAppointments);
